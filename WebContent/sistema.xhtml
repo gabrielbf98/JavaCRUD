@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<h:body>
+
+	<p:panel header="Relatorio...">
+		<h:form id="form1" target="_blank">
+			<p:commandButton value="Gerar relatorio" action="#{mb.reportCliente}"
+				ajax="false" update=":form1, :form2, :form3" />
+		</h:form>
+	</p:panel>
+
+	<!-- fim do form1 -->
+
+
+	<!-- uml ManagerBean, Composicao fortemenete acoplado -->
+	<p:panel header="Gravacao">
+		<h:form id="form2">
+			<p:panelGrid columns="2">
+				<h:outputText value="Nome" />
+				<p:inputText value="#{mb.cliente.nome}" />
+
+				<h:outputText value="Email" />
+				<p:inputText value="#{mb.cliente.email}" />
+
+				<p:commandButton value="Gravar" action="#{mb.cadastrar}" ajax="true"
+					update=":form2,:form3" />
+			</p:panelGrid>
+		<p:growl></p:growl>
+		</h:form>
+
+	</p:panel>
+
+
+	<p:panel header="Listagem">
+		<h:form id="form3">
+			<p:dataTable value="#{mb.clientes}" var="linha" rows="3"
+				paginator="true">
+				<p:column headerText="Id">
+					<h:outputText value="#{linha.id}"></h:outputText>
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{linha.nome}"></h:outputText>
+				</p:column>
+				<p:column headerText="Email">
+					<h:outputText value="#{linha.email}"></h:outputText>
+				</p:column>
+
+
+				<p:column headerText="Excluir">
+					<p:commandButton value="Excluir" action="#{mb.excluir}" ajax="true"
+						update=":form3">
+						<f:setPropertyActionListener value="#{linha}"
+							target="#{mb.cliente}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+				
+				<p:column headerText="Alterar">
+					<p:commandButton value="Alterar" onclick="PF('ALTERA').show()" ajax="true"
+						update=":form4">
+						<f:setPropertyActionListener value="#{linha}"
+							target="#{mb.cliente}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+		<p:growl></p:growl>
+		</h:form>
+	</p:panel>
+	<p:dialog header="Alterar o Cliente" widgetVar="ALTERA" modal="true">
+		<p:panel header="Alterar">
+			<h:form id="form4">
+				<h:inputHidden value="#{mb.cliente.id}" />
+				<p:panelGrid columns="2">
+
+					<h:outputText value="Nome" />
+					<p:inputText value="#{mb.cliente.nome}" />
+
+					<h:outputText value="Email" />
+					<p:inputText value="#{mb.cliente.email}" />
+				</p:panelGrid>
+
+				<p:commandButton value="Atualizar" action="#{mb.alterar}"
+					ajax="true" update=":form2,:form3,:form4"
+					onclick="PF('ALTERA').hide()">
+					</p:commandButton>
+			</h:form>
+		</p:panel>
+	</p:dialog>
+</h:body>
+</html>
